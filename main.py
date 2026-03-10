@@ -15,32 +15,54 @@ def menu():
     match op:
         case 1:
             find = input("Enter The Book You Want To Find: ")
-            filtered_df = df[df["Book-Title"].str.contains(find, case=False, na=False)]
+            filtered_sr = df[df["Book-Title"].str.contains(find, case=False, na=False)]
 
-            if not filtered_df.empty:
+            if not filtered_sr.empty:
                 print("\n--- Search Results ---")
-                print(filtered_df[["Book-Title", "Book-Author"]].to_string(index=False))
+                print(filtered_sr[["ISBN","Book-Title", "Book-Author"]].to_string(index=False))
             else:
                 print()
                 print()
                 print()
                 print(f"No books found matching '{find}'.")
-        
             print()
             print()
             print()
             menu()
         
-        case 2:
-
-            pass
-
-
+        case 3:
+            bor = input("Enter The Book ISBN (refer to book search) You Want To Find: ")
+            filtered_br = df[df["ISBN"].str.contains(bor, case=False, na=False)]
+            check = df[df["ISBN"].str.contains(bor,case=False,na=False)]
+            if check.empty:
+                if not filtered_br.empty:
+                    print(f" Your Book is: ")
+                    print()
+                    print(filtered_br[["ISBN","Book-Title"]].to_string(index=False))
+                    name = input("Enter The Borrower's Name")
+                    new = [bor,name]
+                    with open('borrow.csv', 'a', newline='') as csvfile:
+                        writer = csv.writer(csvfile)
+                        writer.writerow(new)
+                        print("Information Saved")
+                        print()
+                        print()
+                    menu()
+                else:
+                    print("ISBN not found please check again")
+                    print()
+                    print()
+                    menu()
+            else:
+                print("The Book Is Already Borrowed.")
+                print()
+                print()
+                menu()
 
 
 
 def welcome():
-    print("===================Welcome to Library Management Interface===================")
+    print("=================== Welcome to Library Management Interface ===================")
     print()
     menu()
 
