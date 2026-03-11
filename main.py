@@ -14,7 +14,7 @@ def menu():
     op = int(input("Enter Your Option: "))
     match op:
         case 1:
-            find = input("Enter The Book You Want To Find: ")
+            find = input("Enter The Book You Want To Find: ").strip()
             filtered_sr = df[df["Book-Title"].str.contains(find, case=False, na=False)]
 
             if not filtered_sr.empty:
@@ -31,7 +31,7 @@ def menu():
             menu()
         
         case 2:
-            bor = input("Enter The Book ISBN (refer to book search) You Want To Find: ")
+            bor = input("Enter The Book ISBN (refer to book search) You Want To Find: ").strip()
             bw = pd.read_csv("borrow.csv", sep=',',on_bad_lines='skip')
             filtered_br = df[df["ISBN"].str.contains(bor, case=False, na=False)]
             check = bw[bw["ISBN"].str.contains(bor,case=False,na=False)]
@@ -40,7 +40,7 @@ def menu():
                     print(f" Your Book is: ")
                     print()
                     print(filtered_br[["ISBN","Book-Title"]].to_string(index=False))
-                    name = input("Enter The Borrower's Name: ")
+                    name = input("Enter The Borrower's Name: ").strip()
                     new = [bor,name]
                     with open('borrow.csv', 'a', newline='') as csvfile:
                         writer = csv.writer(csvfile)
@@ -60,7 +60,7 @@ def menu():
                 print()
                 menu()
         case 3:
-            isbn = input("Enter The ISBN of The Book: ")
+            isbn = input("Enter The ISBN of The Book: ").strip()
             bw = pd.read_csv("borrow.csv", sep=',',on_bad_lines='skip')
             fetched_re = bw[bw["ISBN"] == isbn]
             if not fetched_re.empty:
@@ -79,6 +79,10 @@ def menu():
         case 4:
             print("Thank You for Using Library Management Interface")
             exit(0)
+        case _:
+            print("Invalid Input")
+            menu()
+
 
 
 
@@ -92,8 +96,8 @@ def login():
     print("Hi User, Please Login To Proceed")
 
     while True:
-        u = input("Enter Your Username: ")
-        p = input("Enter Your Password: ")
+        u = input("Enter Your Username: ").strip()
+        p = input("Enter Your Password: ").strip()
 
         login = False
 
