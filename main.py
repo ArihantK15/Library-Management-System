@@ -2,14 +2,14 @@ import csv
 import pandas as pd
 df = pd.read_csv("books_cleaned.csv", sep=';',on_bad_lines='skip')
 
+
 def menu():
     print("What Would You Like To Do?..")
     print()
     print(" 1. Search For A Book")
-    print(" 2. See The Current Books Borrowed")
-    print(" 3. Borrow A Book")
-    print(" 4. Return A Book")
-    print(" 5. Change Login")
+    print(" 2. Borrow A Book")
+    print(" 3. Return A Book")
+    print(" 4. LogOut")
     print()
     op = int(input("Enter Your Option: "))
     match op:
@@ -30,16 +30,17 @@ def menu():
             print()
             menu()
         
-        case 3:
+        case 2:
             bor = input("Enter The Book ISBN (refer to book search) You Want To Find: ")
+            bw = pd.read_csv("borrow.csv", sep=',',on_bad_lines='skip')
             filtered_br = df[df["ISBN"].str.contains(bor, case=False, na=False)]
-            check = df[df["ISBN"].str.contains(bor,case=False,na=False)]
+            check = bw[bw["ISBN"].str.contains(bor,case=False,na=False)]
             if check.empty:
                 if not filtered_br.empty:
                     print(f" Your Book is: ")
                     print()
                     print(filtered_br[["ISBN","Book-Title"]].to_string(index=False))
-                    name = input("Enter The Borrower's Name")
+                    name = input("Enter The Borrower's Name: ")
                     new = [bor,name]
                     with open('borrow.csv', 'a', newline='') as csvfile:
                         writer = csv.writer(csvfile)
@@ -58,6 +59,26 @@ def menu():
                 print()
                 print()
                 menu()
+        case 3:
+            isbn = input("Enter The ISBN of The Book: ")
+            bw = pd.read_csv("borrow.csv", sep=',',on_bad_lines='skip')
+            fetched_re = bw[bw["ISBN"] == isbn]
+            if not fetched_re.empty:
+                print("Book Found")
+                print()
+                bw = bw[bw["ISBN"] != isbn]
+                print()
+                print("Book Returned")
+                bw.to_csv("borrow.csv", index=False)
+                print()
+                menu()
+            else:
+                print("Book not found")
+                menu()
+
+        case 4:
+            print("Thank You for Using Library Management Interface")
+            exit(0)
 
 
 
